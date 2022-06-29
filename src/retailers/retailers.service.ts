@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Category, CategoryDocument } from 'src/schemas/category.schema';
 import { Retailer, RetailerDocument } from 'src/schemas/retailers.schema';
+import { RetailerDto } from 'src/utils/dtos';
 
 @Injectable()
 export class RetailerService {
@@ -16,7 +17,7 @@ export class RetailerService {
   async findById(id: string): Promise<Retailer> {
     return this.retailerModel.findById(id).exec();
   }
-  async create(retailer: Retailer): Promise<Retailer> {
+  async create(retailer: RetailerDto): Promise<Retailer> {
     const newRetailer = new this.retailerModel(retailer);
     return newRetailer.save();
   }

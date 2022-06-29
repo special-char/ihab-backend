@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { Document, Schema as MongoSchema } from 'mongoose';
 import { Category } from './category.schema';

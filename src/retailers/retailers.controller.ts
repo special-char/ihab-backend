@@ -1,8 +1,26 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UploadedFiles,
+} from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import { Category } from 'src/schemas/category.schema';
-import { Retailer, RetailerSchema } from 'src/schemas/retailers.schema';
+import { Retailer } from 'src/schemas/retailers.schema';
 import { RetailerService } from './retailers.service';
+import { FastifyFileFieldsInterceptor } from 'nest-fastify-multer';
+
+import { diskStorage } from 'multer';
+import {
+  editFileName,
+  fileMapper,
+  imageFileFilter,
+} from 'src/utils/fileOperation';
+import { RetailerDto } from 'src/utils/dtos';
 
 @Controller('retailers')
 export class RetailerController {
@@ -16,11 +34,36 @@ export class RetailerController {
   getRetailer(@Param() params): Promise<Retailer> {
     return this.retailerService.findById(params?.id);
   }
+
   @Post()
   @ApiBody({ type: Retailer })
-  createRetailer(@Body() dto: Retailer): Promise<Retailer> {
+  @FastifyFileFieldsInterceptor(
+    [
+      { name: 'logo', maxCount: 1 },
+      { name: 'banner', maxCount: 1 },
+    ],
+    {
+      storage: diskStorage({
+        destination: './upload',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    },
+  )
+  createRetailer(
+    @Req() req: Request,
+    @UploadedFiles()
+    files: { logo?: Express.Multer.File[]; banner?: Express.Multer.File[] },
+    @Body() dto: RetailerDto,
+  ): Promise<Retailer> {
+    const data = {
+      ...dto,
+      logo: fileMapper(logo, req),
+      banner: fileMapper(banner, req),
+    };
     return this.retailerService.create(dto);
   }
+
   @Patch()
   assignCategories(@Body() dto: CatType): Promise<Retailer> {
     return this.retailerService.assignCategories(dto.categories, dto.id);
