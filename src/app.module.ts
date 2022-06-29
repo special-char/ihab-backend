@@ -37,7 +37,7 @@ interface DatabaseConfig {
     UsersModule,
     CategoriesModule,
   ],
-  controllers: [AppController, CategoriesController],
-  providers: [AppService, CategoriesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
