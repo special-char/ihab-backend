@@ -10,6 +10,8 @@ import { AppService } from './app.service';
 import { CategoriesController } from './categories/categories.controller';
 import { CategoriesModule } from './categories/categories.module';
 import { CategoriesService } from './categories/categories.service';
+import { OrdersModule } from './orders/orders.module';
+import { OffersModule } from './offers/offers.module';
 
 interface DatabaseConfig {
   url: string;
@@ -36,6 +38,8 @@ interface DatabaseConfig {
     AuthModule,
     UsersModule,
     CategoriesModule,
+    OrdersModule,
+    OffersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
