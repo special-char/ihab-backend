@@ -7,9 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import configuration from './config/configuration';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CategoriesController } from './categories/categories.controller';
 import { CategoriesModule } from './categories/categories.module';
-import { CategoriesService } from './categories/categories.service';
+import { RetailerModule } from './retailers/retailers.module';
 
 interface DatabaseConfig {
   url: string;
@@ -36,6 +35,7 @@ interface DatabaseConfig {
     AuthModule,
     UsersModule,
     CategoriesModule,
+    RetailerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
