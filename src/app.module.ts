@@ -3,10 +3,17 @@ import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import configuration from './config/configuration';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CategoriesController } from './categories/categories.controller';
+import { CategoriesModule } from './categories/categories.module';
+import { CategoriesService } from './categories/categories.service';
+
+interface DatabaseConfig {
+  url: string;
+}
 
 @Module({
   imports: [
@@ -14,27 +21,23 @@ import { AppService } from './app.service';
       envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV}`,
       load: [configuration],
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const database = config.get<DatabaseConfig>('database');
 
-    // TypeOrmModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: (configService: ConfigService) => ({
-    //     type: 'postgres',
-    //     host: configService.get('HOST'),
-    //     port: configService.get('PORT'),
-    //     username: configService.get('USERNAME'),
-    //     password: configService.get('PASSWORD'),
-    //     database: configService.get('DATABASE'),
-    //     entities: [],
-    //     synchronize: true,
-    //   }),
-    //   inject: [ConfigService],
-    // }),
-
+        return {
+          uri: database.url,
+        };
+      },
+    }),
     CoreModule,
     AuthModule,
     UsersModule,
+    CategoriesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CategoriesController],
+  providers: [AppService, CategoriesService],
 })
 export class AppModule {}
