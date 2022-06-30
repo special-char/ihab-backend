@@ -9,7 +9,6 @@ import {
 import { AppModule } from './app.module';
 import { SwaggerDocumentOptions } from './swagger/swaggerDocumentOptions';
 import { FastifySwaggerCustomOptions } from './swagger/fastifySwaggerCustomOptions';
-import { contentParser } from 'fastify-multer';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -43,7 +42,6 @@ async function bootstrap() {
   };
 
   SwaggerModule.setup('docs', app, document, customOptions);
-  await app.register(contentParser);
 
   await app.listen(port, '0.0.0.0');
 
