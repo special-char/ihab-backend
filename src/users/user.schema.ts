@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
 import { Document } from 'mongoose';
 import { Role } from 'src/common/enums/role.enum';
 import { UserStatus } from './dto/create-user.dto';
@@ -28,7 +29,7 @@ export class User {
   })
   email: string;
 
-  @Prop({ required: true, select: false })
+  @Prop({ required: true })
   password: string;
 
   @Prop({
@@ -46,6 +47,17 @@ export class User {
     default: [Role.User],
   })
   roles: string[];
+
+  validatePassword: Function;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.methods.validatePassword = async function (
+  password: string,
+): Promise<boolean> {
+  console.log('password', password);
+  console.log('this.password', this.password);
+
+  return bcrypt.compare(password, this.password);
+};

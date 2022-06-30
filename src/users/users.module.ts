@@ -28,14 +28,6 @@ import { NextFunction } from 'express';
             });
           });
 
-          UserSchema.methods.checkPassword = function (attempt, callback) {
-            let user = this;
-            bcrypt.compare(attempt, user.password, (err, isMatch) => {
-              if (err) return callback(err);
-              callback(null, isMatch);
-            });
-          };
-
           return schema;
         },
       },
