@@ -8,7 +8,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { contentParser } from 'fastify-multer';
 import { AppModule } from './app.module';
-import { SwaggerDocumentOptions } from './swagger/SwaggerDocumentOptions';
+import { SwaggerDocumentOptions } from './swagger/swaggerDocumentOptions';
 import { FastifySwaggerCustomOptions } from './swagger/fastifySwaggerCustomOptions';
 
 async function bootstrap() {

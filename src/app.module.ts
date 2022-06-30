@@ -7,11 +7,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import configuration from './config/configuration';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CategoriesController } from './categories/categories.controller';
 import { CategoriesModule } from './categories/categories.module';
-import { CategoriesService } from './categories/categories.service';
 import { OrdersModule } from './orders/orders.module';
 import { OffersModule } from './offers/offers.module';
+import { RetailerModule } from './retailers/retailers.module';
 
 interface DatabaseConfig {
   url: string;
@@ -43,6 +42,7 @@ interface DatabaseConfig {
     CategoriesModule,
     OrdersModule,
     OffersModule,
+    RetailerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
