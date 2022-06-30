@@ -44,8 +44,6 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document, customOptions);
 
-  await app.register(contentParser);
-
   await app.listen(port, '0.0.0.0');
 
   console.log(`Application is running on: ${await app.getUrl()}`);
