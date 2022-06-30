@@ -22,12 +22,15 @@ interface DatabaseConfig {
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV}`,
       load: [configuration],
+      isGlobal: true,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         const database = config.get<DatabaseConfig>('database');
+
+        console.log(database);
 
         return {
           uri: database.url,
