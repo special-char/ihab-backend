@@ -9,9 +9,9 @@ RUN apk --no-cache --virtual build-dependencies add \
         python3 \
         make \
         g++ \
-&& yarn add glob rimraf \
-&& yarn install --development \
-&& apk del build-dependencies
+        && yarn add glob rimraf \
+        && yarn install --development \
+        && apk del build-dependencies
 
 COPY . .
 
@@ -31,9 +31,9 @@ RUN apk --no-cache --virtual build-dependencies add \
         python3 \
         make \
         g++ \
-&& yarn add glob rimraf \
-&& yarn install --production \
-&& apk del build-dependencies
+        && yarn add glob rimraf \
+        && yarn install --production \
+        && apk del build-dependencies
 
 COPY . .
 
