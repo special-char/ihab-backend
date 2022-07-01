@@ -14,9 +14,11 @@ export class RetailerService {
   async findAll(): Promise<Retailer[]> {
     return this.retailerModel.find().exec();
   }
+
   async findById(id: string): Promise<Retailer> {
     return this.retailerModel.findById(id).exec();
   }
+
   async create(retailer: RetailerDto): Promise<Retailer> {
     const newRetailer = new this.retailerModel(retailer);
     return newRetailer.save();
