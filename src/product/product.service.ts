@@ -15,4 +15,15 @@ export class ProductService {
   async findOne(id: string): Promise<Product> {
     return this.prodModel.findById(id).exec();
   }
+  async findByCategories(cat_id: string): Promise<Product[]> {
+    console.log(cat_id);
+    return this.prodModel.find({ categories: [cat_id] }).exec();
+  }
+  async create(product: Product): Promise<Product> {
+    const dta = new this.prodModel(product);
+    return dta.save();
+  }
+  async delete(id: string): Promise<boolean> {
+    return this.prodModel.findByIdAndRemove(id);
+  }
 }

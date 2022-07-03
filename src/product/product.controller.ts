@@ -1,8 +1,11 @@
 import {
+  Body,
   //   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Post,
   //   Patch,
   //   Post,
   // Req,
@@ -28,11 +31,20 @@ export class ProductController {
     return this.productService.findOne(params?.id);
   }
 
-  //   @Post()
-  //   @ApiBody({ type: Retailer })
-  //   createRetailer(@Body() dto: RetailerDto): Promise<Retailer> {
-  //     return this.productService.create(dto);
-  //   }
+  @Get('/categories/:id')
+  getProductsByCategories(@Param() params): Promise<Product[]> {
+    return this.productService.findByCategories(params?.id);
+  }
+
+  @Post()
+  createRetailer(@Body() dto: Product): Promise<Product> {
+    return this.productService.create(dto);
+  }
+
+  @Delete(':id')
+  deleteProduct(@Param() params): Promise<boolean> {
+    return this.productService.delete(params?.id);
+  }
 
   //   @Patch()
   //   assignCategories(@Body() dto: CatType): Promise<Retailer> {
