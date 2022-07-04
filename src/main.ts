@@ -6,7 +6,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { contentParser } from 'fastify-multer';
+import * as fmp from 'fastify-multipart';
 import { AppModule } from './app.module';
 import { SwaggerDocumentOptions } from './swagger/swaggerDocumentOptions';
 import { FastifySwaggerCustomOptions } from './swagger/fastifySwaggerCustomOptions';
@@ -43,6 +43,8 @@ async function bootstrap() {
   };
 
   SwaggerModule.setup('docs', app, document, customOptions);
+
+  app.register(fmp);
 
   app.enableCors();
 
