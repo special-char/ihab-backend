@@ -24,6 +24,8 @@ services:
     command: certonly --webroot --webroot-path /var/www/certbot/ --force-renewal --email ceo@thespecialcharacter.com -d api.scottpoint.com.au --agree-tos
     depends_on:
       - nginx
+    networks:
+      - webnet
   api:
     build: ./
     ports:
