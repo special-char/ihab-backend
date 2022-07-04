@@ -11,6 +11,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { OffersModule } from './offers/offers.module';
 import { RetailerModule } from './retailers/retailers.module';
+import { ProductModule } from './product/product.module';
 
 interface DatabaseConfig {
   url: string;
@@ -43,6 +44,7 @@ interface DatabaseConfig {
     OrdersModule,
     OffersModule,
     RetailerModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -12,4 +12,9 @@ export class CategoriesController {
   getCategories(): Promise<Category[]> {
     return this.categoriesService.findAll();
   }
+
+  @Get('/parent')
+  getParentCategories(): Promise<Category[]> {
+    return this.categoriesService.findParent();
+  }
 }

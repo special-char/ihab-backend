@@ -12,4 +12,8 @@ export class CategoriesService {
   async findAll(): Promise<Category[]> {
     return this.catModel.find().exec();
   }
+
+  async findParent(): Promise<Category[]> {
+    return this.catModel.find({ parent_id: null }).exec();
+  }
 }
