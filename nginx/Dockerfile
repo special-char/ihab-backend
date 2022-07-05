@@ -8,7 +8,7 @@ FROM jwilder/nginx-proxy:0.9
 # Copy config files
 # *.conf files in conf.d/ dir get included in main config
 # COPY ./default.conf /etc/nginx/conf.d/
-COPY ./vhost.d/default /etc/nginx/vhost.d/default
+COPY ./conf.d/default /etc/nginx/vhost.d/default
 COPY default.conf /etc/nginx/conf.d/custom.conf
 
 # Expose the listening port
