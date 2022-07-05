@@ -7,7 +7,7 @@ FROM nginx:alpine
 
 # Copy config files
 # *.conf files in conf.d/ dir get included in main config
-COPY ./default.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 # COPY ./conf.d/default /etc/nginx/vhost.d/default
 # COPY default.conf /etc/nginx/conf.d/custom.conf
 
