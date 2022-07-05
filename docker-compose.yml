@@ -34,7 +34,7 @@ services:
     # image: certbot/certbot:latest
     image: jrcs/letsencrypt-nginx-proxy-companion
     env_file:
-        - ./env.prod
+        - ./.env.prod
     # volumes:
     #   - ./certbot/www/:/var/www/certbot/:rw
     #   - ./certbot/conf/:/etc/letsencrypt/:rw
