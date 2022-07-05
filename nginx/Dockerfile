@@ -4,7 +4,8 @@ FROM nginx:alpine
 
 # Remove any existing config files
 # RUN rm /etc/nginx/conf.d/*
-
+RUN addgroup -g 1000 -S www-data \
+ && adduser -u 1000 -D -S -G www-data www-data
 # Copy config files
 # *.conf files in conf.d/ dir get included in main config
 COPY ./nginx.conf /etc/nginx/nginx.conf
