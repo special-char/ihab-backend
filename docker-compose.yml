@@ -22,41 +22,41 @@ services:
       # - ./certbot/www:/var/www/certbot/:ro
       # - ./certbot/conf/:/etc/nginx/ssl/:ro
       # - ./certbot/conf:/etc/letsencrypt
-      # - certs:/etc/nginx/certs
-      # - html:/usr/share/nginx/html
-      # - vhost:/etc/nginx/vhost.d
-      # - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - -v /var/run/docker.sock:/tmp/docker.sock:ro
       # - ./public_html:/public_html
-      - ./conf.d:/etc/nginx/conf.d/
-      - ./dhparam:/etc/nginx/dhparam
-      - ./certbot/conf/:/etc/nginx/ssl/
-      - ./certbot/data:/usr/share/nginx/html/letsencrypt
+      # - ./conf.d:/etc/nginx/conf.d/
+      # - ./dhparam:/etc/nginx/dhparam
+      # - ./certbot/conf/:/etc/nginx/ssl/
+      # - ./certbot/data:/usr/share/nginx/html/letsencrypt
     depends_on:
       - api
     networks:
       - webnet
   certbot:
-    image: certbot/certbot:latest
-    volumes:
-       - ./certbot/conf/:/etc/letsencrypt
-       - ./certbot/logs/:/var/log/letsencrypt
-       - ./certbot/data:/usr/share/nginx/html/letsencrypt
     # image: certbot/certbot:latest
-    # image: jrcs/letsencrypt-nginx-proxy-companion
-    # env_file:
-    #     - ./.env.prod
+    # volumes:
+    #    - ./certbot/conf/:/etc/letsencrypt
+    #    - ./certbot/logs/:/var/log/letsencrypt
+    #    - ./certbot/data:/usr/share/nginx/html/letsencrypt
+    # image: certbot/certbot:latest
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    env_file:
+        - ./.env.prod
     # volumes:
     #   - ./certbot/www/:/var/www/certbot/:rw
     #   - ./certbot/conf/:/etc/letsencrypt/:rw
-    # volumes:
-    #   - /var/run/docker.sock:/tmp/docker.sock:ro
-    #   - certs:/etc/nginx/certs
-    #   - html:/usr/share/nginx/html
-    #   - vhost:/etc/nginx/vhost.d
-    #   - acme:/etc/acme.sh
+    volumes:
+      - -v /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - acme:/etc/acme.sh
       # - ./certbot/conf/:/etc/letsencrypt/:rw
     # command: certonly --webroot -w /var/www/certbot/ --force-renewal --email ceo@thespecialcharacter.com -d api.scottpoint.com.au --agree-tos
-    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email ceo@thespecialcharacter.com --agree-tos --no-eff-email -d api.scottpoint.com.au
+    # command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email ceo@thespecialcharacter.com --agree-tos --no-eff-email -d api.scottpoint.com.au
     depends_on:
       - nginx
     networks:
@@ -64,10 +64,8 @@ services:
 networks:
   webnet:
 
-# volumes:
-#   static:
-#   images:
-#   certs:
-#   html:
-#   vhost:
-#   acme:
+volumes:
+  certs:
+  html:
+  vhost:
+  acme:
