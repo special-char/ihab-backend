@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Category, CategoryDocument } from 'src/schemas/category.schema';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model } from 'mongoose';
+import { Category } from 'src/schemas/category.schema';
 import { Retailer, RetailerDocument } from 'src/schemas/retailers.schema';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UsersService } from 'src/users/users.service';
 import { RetailerDto } from 'src/utils/dtos';
 
 @Injectable()
 export class RetailerService {
   constructor(
     @InjectModel(Retailer.name) private retailerModel: Model<RetailerDocument>,
+    private readonly usersService: UsersService,
+    @InjectConnection() private readonly connection: mongoose.Connection,
   ) {}
 
   async findAll(): Promise<Retailer[]> {
@@ -19,9 +23,47 @@ export class RetailerService {
     return this.retailerModel.findById(id).exec();
   }
 
-  async create(retailer: RetailerDto): Promise<Retailer> {
-    const newRetailer = new this.retailerModel(retailer);
-    return newRetailer.save();
+  async create(retailer: RetailerDto & CreateUserDto): Promise<Retailer> {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const {
+        firstName,
+        lastName,
+        email,
+        password,
+        status,
+        phoneNumber,
+        ...rest
+      } = retailer;
+
+      const res = await this.usersService.create(
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+          status,
+          phoneNumber,
+        },
+        session,
+      );
+
+      const newRetailer = new this.retailerModel({
+        ...rest,
+        slug: rest.registeredBusinessName.replaceAll(' ', '_'),
+        userId: res._id,
+      });
+      newRetailer.save({ session });
+      await session.commitTransaction();
+      session.endSession();
+      return newRetailer;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 
   async assignCategories(

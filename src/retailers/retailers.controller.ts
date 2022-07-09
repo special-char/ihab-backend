@@ -16,6 +16,7 @@ import { RetailerService } from './retailers.service';
 
 // import { diskStorage } from 'multer';
 import { RetailerDto } from 'src/utils/dtos';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('retailers')
 export class RetailerController {
@@ -32,7 +33,9 @@ export class RetailerController {
 
   @Post()
   @ApiBody({ type: Retailer })
-  createRetailer(@Body() dto: RetailerDto): Promise<Retailer> {
+  async createRetailer(
+    @Body() dto: RetailerDto & CreateUserDto,
+  ): Promise<Retailer> {
     return this.retailerService.create(dto);
   }
 

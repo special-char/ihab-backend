@@ -1,3 +1,4 @@
 {
-  "atlascode.jira.enabled": true
+  "atlascode.jira.enabled": true,
+  "editor.formatOnSave": true
 }

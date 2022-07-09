@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 import { Document, Schema as MongoSchema } from 'mongoose';
+import { User } from 'src/users/user.schema';
 import { Category } from './category.schema';
 
 export type RetailerDocument = Retailer & Document;
@@ -10,34 +11,16 @@ export type RetailerDocument = Retailer & Document;
 export class Retailer {
   @ApiProperty()
   @Prop({ required: true })
-  firstName: string;
+  registeredBusinessName: string;
   @ApiProperty()
   @Prop({ required: true })
-  lastName: string;
+  shopDescription: string;
   @ApiProperty()
   @Prop({ required: true })
-  email: string;
+  shopImage: string;
   @ApiProperty()
   @Prop({ required: true })
-  password: string;
-  @ApiProperty()
-  @Prop({ required: true })
-  status: string;
-  @ApiProperty()
-  @Prop({ required: true })
-  phone: string;
-  @ApiProperty()
-  @Prop({ required: true })
-  bName: string;
-  @ApiProperty()
-  @Prop({ required: true })
-  shopDesc: string;
-  @ApiProperty()
-  @Prop({ required: true })
-  logo: string;
-  @ApiProperty()
-  @Prop({ required: true })
-  banner: string;
+  bannerImage: string;
   @ApiProperty()
   @Prop({ required: true })
   industry: string;
@@ -52,13 +35,13 @@ export class Retailer {
   yelloStoreRefId: string;
   @ApiProperty()
   @Prop({ required: true })
-  ausPostStoreRefId: string;
+  ausPostStoreId: string;
   @ApiProperty()
   @Prop({ required: true })
   storeUrl: string;
   @ApiProperty()
   @Prop({ required: true })
-  busDesc: string;
+  businessDesc: string;
   @ApiProperty()
   @Prop({ required: true })
   ownerPhone: string;
@@ -67,16 +50,16 @@ export class Retailer {
   webAddress: string;
   @ApiProperty()
   @Prop({ required: true })
-  isWebLive: boolean;
+  isWebLive: string;
   @ApiProperty()
   @Prop({ required: true })
   country: string;
   @ApiProperty()
   @Prop({ required: true })
-  add1: string;
+  address1: string;
   @ApiProperty()
   @Prop({ required: true })
-  add2: string;
+  address2: string;
   @ApiProperty()
   @Prop({ required: true })
   suburb: string;
@@ -88,13 +71,13 @@ export class Retailer {
   postcode: string;
   @ApiProperty()
   @Prop({ required: true })
-  avgorderval: string;
+  averageOrderValue: string;
   @ApiProperty()
   @Prop({ required: true })
-  skuCount: string;
+  numberOfProductsSold: string;
   @ApiProperty()
   @Prop({ required: true })
-  totalSale: string;
+  totalAnnualSales: string;
   @ApiProperty()
   @Prop({ required: true })
   pointOfSale: string;
@@ -103,22 +86,25 @@ export class Retailer {
   inventoryManagement: string;
   @ApiProperty()
   @Prop({ required: true })
-  haveExistingAPi: boolean;
+  haveExistingAPI: string;
   @ApiProperty()
   @Prop({ required: true })
   transactionFees: string;
   @ApiProperty()
   @Prop({ required: true })
-  expressShipFees: string;
+  freeExpShipping: string;
   @ApiProperty()
   @Prop({ required: true })
-  standardRangeforFree: string;
+  freeStandShipping: string;
   @ApiProperty()
   @Prop({ required: true })
-  intlRangeforFree: string;
+  freeInterShipping: string;
   @ApiProperty()
   @Prop({ required: true })
-  sendleRangeForFree: string;
+  freeStandSendle: string;
+  @ApiProperty()
+  @Prop({ required: true })
+  freeInterSendle: string;
   @ApiProperty()
   @Prop({ required: true })
   orderEmail: string;
@@ -142,7 +128,7 @@ export class Retailer {
   accNum: string;
   @ApiProperty()
   @Prop({ required: true })
-  accNumbtManager: string;
+  btAccManager: string;
   @ApiProperty()
   @Prop({ required: true })
   sendleAPiKey: string;
@@ -154,7 +140,7 @@ export class Retailer {
   sendlePlans: string;
   @ApiProperty()
   @Prop({ required: true })
-  shipContry: string;
+  shipContries: [];
   @ApiProperty()
   @Prop()
   affiliateLink: string;
@@ -173,6 +159,12 @@ export class Retailer {
     type: [{ type: MongoSchema.Types.ObjectId, ref: () => Category }],
   })
   categories: Category;
+  @ApiProperty()
+  @IsOptional()
+  @Prop({
+    type: { type: MongoSchema.Types.ObjectId, ref: () => User },
+  })
+  userId: User;
 }
 
 export const RetailerSchema = SchemaFactory.createForClass(Retailer);
