@@ -161,10 +161,8 @@ export class Retailer {
   categories: Category;
   @ApiProperty()
   @IsOptional()
-  @Prop({
-    type: { type: MongoSchema.Types.ObjectId, ref: () => User },
-  })
-  userId: User;
+  @Prop({ type: MongoSchema.Types.ObjectId, ref: 'User' })
+  user: User;
 }
 
 export const RetailerSchema = SchemaFactory.createForClass(Retailer);

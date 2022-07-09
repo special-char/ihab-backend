@@ -16,7 +16,10 @@ export class RetailerService {
   ) {}
 
   async findAll(): Promise<Retailer[]> {
-    return this.retailerModel.find().exec();
+    return this.retailerModel
+      .find()
+      .populate('user', ['firstName', 'lastName', 'email', 'phoneNumber'])
+      .exec();
   }
 
   async findById(id: string): Promise<Retailer> {
@@ -38,7 +41,7 @@ export class RetailerService {
         ...rest
       } = retailer;
 
-      const res = await this.usersService.create(
+      const user = await this.usersService.create(
         {
           firstName,
           lastName,
@@ -53,9 +56,9 @@ export class RetailerService {
       const newRetailer = new this.retailerModel({
         ...rest,
         slug: rest.registeredBusinessName.replaceAll(' ', '_'),
-        userId: res._id,
+        user,
       });
-      newRetailer.save({ session });
+      await newRetailer.save({ session });
       await session.commitTransaction();
       session.endSession();
       return newRetailer;
