@@ -2,12 +2,20 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Offer, OfferDocument } from 'src/schemas/offers.schema';
+import {
+  RetailerOffer,
+  RetailerOfferDocument,
+} from 'src/schemas/retailerOffers.schema';
+import { RetailerOfferStatus } from 'src/utils/types';
+import { CounterOfferDto } from './dto/counter-offer.dto';
 import { MakeOfferDto } from './dto/make-offer.dto';
 
 @Injectable()
 export class OffersService {
   constructor(
     @InjectModel(Offer.name) private offerModel: Model<OfferDocument>,
+    @InjectModel(RetailerOffer.name)
+    private retailerOfferModel: Model<RetailerOfferDocument>,
     @InjectConnection() private readonly connection: mongoose.Connection,
   ) {}
 
@@ -46,10 +54,37 @@ export class OffersService {
           $gt: currentTime,
         },
       })
+      .populate('productId')
       .exec();
   }
 
   async findOne(id: string): Promise<Offer> {
     return this.offerModel.findById(id).exec();
+  }
+
+  async counterOffer(
+    offer: CounterOfferDto & { retailerId: string },
+  ): Promise<Offer> {
+    const retailerOffer = await this.retailerOfferModel.findOneAndUpdate(
+      {
+        OfferId: offer.offerId,
+        retailerId: offer.retailerId,
+        status: RetailerOfferStatus.Pending,
+      },
+      {
+        OfferId: offer.offerId,
+        retailerId: offer.retailerId,
+        offerPrice: offer.offerPrice,
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+
+    console.log(retailerOffer);
+
+    return this.offerModel.findByIdAndUpdate(offer.offerId, {
+      $addToSet: {
+        retailerOffers: retailerOffer._id,
+      },
+    });
   }
 }

@@ -28,12 +28,7 @@ export class Offer {
     type: String,
     required: true,
     default: OfferStatus.Active,
-    enum: [
-      OfferStatus.Active,
-      OfferStatus.Inactive,
-      OfferStatus.Accepted,
-      OfferStatus.Rejected,
-    ],
+    enum: [OfferStatus.Active, OfferStatus.Inactive],
   })
   status: string;
 
@@ -54,8 +49,7 @@ export class Offer {
   @Prop({
     type: [{ type: MongoSchema.Types.ObjectId, ref: RetailerOffer.name }],
   })
-  @Type(() => RetailerOffer)
-  retailerOffers: RetailerOffer;
+  retailerOffers: RetailerOffer[];
 }
 
 export const OfferSchema = SchemaFactory.createForClass(Offer);
