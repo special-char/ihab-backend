@@ -27,25 +27,21 @@ export class RetailerController {
     return this.retailerService.findAll();
   }
   @Get(':id')
-  getRetailer(@Param() params): Promise<Retailer> {
-    return this.retailerService.findById(params?.id);
+  getRetailer(@Param('id') id: string): Promise<Retailer> {
+    return this.retailerService.findById(id);
   }
 
   @Post()
   @ApiBody({ type: Retailer })
-  async createRetailer(
-    @Body() dto: RetailerDto & CreateUserDto,
-  ): Promise<Retailer> {
+  createRetailer(@Body() dto: RetailerDto & CreateUserDto): Promise<Retailer> {
     return this.retailerService.create(dto);
   }
 
-  @Patch()
-  assignCategories(@Body() dto: CatType): Promise<Retailer> {
-    return this.retailerService.assignCategories(dto.categories, dto.id);
+  @Patch(':id')
+  assignCategories(
+    @Param('id') id: string,
+    @Body() dto: Category[],
+  ): Promise<Retailer> {
+    return this.retailerService.assignCategories(dto, id);
   }
-}
-
-interface CatType {
-  id: string;
-  categories: Category[];
 }

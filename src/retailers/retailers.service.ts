@@ -73,9 +73,11 @@ export class RetailerService {
     categories: Category[],
     id: string,
   ): Promise<Retailer> {
-    return this.retailerModel
-      .findByIdAndUpdate({ _id: id }, { categories: categories }, { new: true })
-      .populate('categories');
+    return this.retailerModel.findByIdAndUpdate(
+      { _id: id },
+      { categories: categories },
+      { new: true },
+    );
     // return newRetailer.save();
   }
 }
