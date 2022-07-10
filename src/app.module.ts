@@ -12,6 +12,8 @@ import { OrdersModule } from './orders/orders.module';
 import { OffersModule } from './offers/offers.module';
 import { RetailerModule } from './retailers/retailers.module';
 import { ProductModule } from './product/product.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './common/guards/roles.guard';
 
 interface DatabaseConfig {
   url: string;

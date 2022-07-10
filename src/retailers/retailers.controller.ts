@@ -26,6 +26,7 @@ export class RetailerController {
   getRetailers(): Promise<Retailer[]> {
     return this.retailerService.findAll();
   }
+
   @Get(':id')
   getRetailer(@Param('id') id: string): Promise<Retailer> {
     return this.retailerService.findById(id);

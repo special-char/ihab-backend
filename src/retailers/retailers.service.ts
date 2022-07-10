@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { Role } from 'src/common/enums/role.enum';
 import { Category } from 'src/schemas/category.schema';
 import { Retailer, RetailerDocument } from 'src/schemas/retailers.schema';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -49,6 +50,7 @@ export class RetailerService {
           password,
           status,
           phoneNumber,
+          roles: [Role.Retailer],
         },
         session,
       );

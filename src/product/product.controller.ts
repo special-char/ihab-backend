@@ -1,20 +1,4 @@
-import {
-  Body,
-  //   Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  //   Patch,
-  //   Post,
-  // Req,
-  // UploadedFiles,
-} from '@nestjs/common';
-// import { Category } from 'src/schemas/category.schema';
-// import { FastifyFileFieldsInterceptor } from 'nest-fastify-multer';
-
-// import { diskStorage } from 'multer';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from 'src/schemas/product.schema';
 
@@ -45,14 +29,4 @@ export class ProductController {
   deleteProduct(@Param() params): Promise<boolean> {
     return this.productService.delete(params?.id);
   }
-
-  //   @Patch()
-  //   assignCategories(@Body() dto: CatType): Promise<Retailer> {
-  //     return this.retailerService.assignCategories(dto.categories, dto.id);
-  //   }
 }
-
-// interface CatType {
-//   id: string;
-//   categories: Category[];
-// }
