@@ -79,14 +79,20 @@ export class OffersService {
           retailerId: offer.retailerId,
           offerPrice: offer.offerPrice,
         },
-        { upsert: true, new: true, setDefaultsOnInsert: true },
+        { upsert: true, new: true, setDefaultsOnInsert: true, session },
       );
 
-      const updatedOffer = this.offerModel.findByIdAndUpdate(offer.offerId, {
-        $addToSet: {
-          retailerOffers: retailerOffer._id,
+      const updatedOffer = await this.offerModel.findByIdAndUpdate(
+        offer.offerId,
+        {
+          $addToSet: {
+            retailerOffers: retailerOffer._id,
+          },
         },
-      });
+        {
+          session,
+        },
+      );
       await session.commitTransaction();
       session.endSession();
       return updatedOffer;
