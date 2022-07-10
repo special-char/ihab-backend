@@ -65,26 +65,35 @@ export class OffersService {
   async counterOffer(
     offer: CounterOfferDto & { retailerId: string },
   ): Promise<Offer> {
-    const retailerOffer = await this.retailerOfferModel.findOneAndUpdate(
-      {
-        OfferId: offer.offerId,
-        retailerId: offer.retailerId,
-        status: RetailerOfferStatus.Pending,
-      },
-      {
-        OfferId: offer.offerId,
-        retailerId: offer.retailerId,
-        offerPrice: offer.offerPrice,
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
-    );
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    try {
+      const retailerOffer = await this.retailerOfferModel.findOneAndUpdate(
+        {
+          OfferId: offer.offerId,
+          retailerId: offer.retailerId,
+          status: RetailerOfferStatus.Pending,
+        },
+        {
+          OfferId: offer.offerId,
+          retailerId: offer.retailerId,
+          offerPrice: offer.offerPrice,
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true },
+      );
 
-    console.log(retailerOffer);
-
-    return this.offerModel.findByIdAndUpdate(offer.offerId, {
-      $addToSet: {
-        retailerOffers: retailerOffer._id,
-      },
-    });
+      const updatedOffer = this.offerModel.findByIdAndUpdate(offer.offerId, {
+        $addToSet: {
+          retailerOffers: retailerOffer._id,
+        },
+      });
+      await session.commitTransaction();
+      session.endSession();
+      return updatedOffer;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 }
