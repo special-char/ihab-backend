@@ -20,7 +20,7 @@ import { OffersService } from './offers.service';
 export class OffersController {
   constructor(private readonly offerService: OffersService) {}
 
-  @Post()
+  @Post('make-offer')
   @Roles(Role.User)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
@@ -43,14 +43,16 @@ export class OffersController {
     @Body() dto: CounterOfferDto,
   ): Promise<Offer> {
     const { userId } = req.user;
-    console.log('req.user', req.user.userId);
-    console.log('dto', dto);
     return this.offerService.counterOffer({ ...dto, retailerId: userId });
   }
 
-  @Get()
-  getOffers(): Promise<Offer[]> {
-    return this.offerService.findAll();
+  @Get('new-offers')
+  @Roles(Role.Retailer)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  getOffers(@Req() req: Request & { user: any }): Promise<Offer[]> {
+    const { userId } = req.user;
+    return this.offerService.newOffers(userId);
   }
   @Get(':id')
   getOffer(@Param() params): Promise<Offer> {

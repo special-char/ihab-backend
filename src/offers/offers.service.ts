@@ -43,8 +43,9 @@ export class OffersService {
     return newOffer.save();
   }
 
-  async findAll(): Promise<Offer[]> {
+  async newOffers(retailerId): Promise<Offer[]> {
     const currentTime = new Date();
+
     return this.offerModel
       .find({
         offerStartTime: {
@@ -55,6 +56,7 @@ export class OffersService {
         },
       })
       .populate('productId')
+      .populate('retailerOffers')
       .exec();
   }
 
