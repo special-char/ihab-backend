@@ -44,6 +44,7 @@ export class Offer {
   })
   offerEndTime: string;
 
+  @Prop()
   customerOfferPrice: number;
 
   @Prop({
