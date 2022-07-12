@@ -7,7 +7,7 @@ import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
 
   async create(
     createUserDto: CreateUserDto & { roles?: Role[] },
@@ -25,5 +25,13 @@ export class UsersService {
 
   async findOne(email: string): Promise<User | undefined> {
     return this.userModel.findOne({ email: email });
+  }
+
+  async findAllAdmin(): Promise<User[]> {
+    return this.userModel.find({
+      roles: {
+        $in: ['admin']
+      }
+    }).exec()
   }
 }
