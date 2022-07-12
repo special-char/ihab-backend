@@ -36,7 +36,7 @@ export class Order {
     @Prop({
         type: String,
         required: true,
-        default: PaymentStatus.Unpaid,
+        default: PaymentStatus.Paid,
         enum: [PaymentStatus.Unpaid, PaymentStatus.Paid],
     })
     paymentStatus: string;
