@@ -33,7 +33,7 @@ export class OffersController {
   }
 
   @Post('counter-offer')
-  @Roles(Role.Retailer)
+  @Roles(Role.Retailer, Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   makeCounterOffer(
@@ -45,7 +45,7 @@ export class OffersController {
   }
 
   @Get('new-offers')
-  @Roles(Role.Retailer)
+  @Roles(Role.Retailer, Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   getOffers(@Req() req: Request & { user: any }): Promise<Offer[]> {
@@ -54,7 +54,7 @@ export class OffersController {
   }
 
   @Get('applied-offers')
-  @Roles(Role.Retailer)
+  @Roles(Role.Retailer, Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   getAppliedOffers(@Req() req: Request & { user: any }): Promise<Offer[]> {
