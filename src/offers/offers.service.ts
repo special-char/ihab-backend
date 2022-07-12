@@ -7,7 +7,7 @@ import {
   RetailerOfferDocument,
 } from 'src/schemas/retailerOffers.schema';
 import { Retailer, RetailerDocument } from 'src/schemas/retailers.schema';
-import { RetailerOfferStatus } from 'src/utils/types';
+import { OfferStatus, RetailerOfferStatus } from 'src/utils/types';
 import { CounterOfferDto } from './dto/counter-offer.dto';
 import { MakeOfferDto } from './dto/make-offer.dto';
 
@@ -34,6 +34,7 @@ export class OffersService {
         offerEndTime: {
           $gt: currentTime,
         },
+        status: OfferStatus.Active
       })
       .exec();
 

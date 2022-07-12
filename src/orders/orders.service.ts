@@ -40,10 +40,24 @@ export class OrdersService {
     }
 
     async findAll(): Promise<Order[]> {
-        return this.orderModel.find().exec();
+        return this.orderModel.find().populate('user').populate({
+            path: 'offer',
+            populate: [
+                {
+                    path: 'productId'
+                }
+            ],
+        }).populate({
+            path: 'retailerOffer',
+            populate: [
+                {
+                    path: 'retailer'
+                }
+            ],
+        }).exec();
     }
 
     async findOne(id: string): Promise<Order> {
-        return this.orderModel.findById(id).exec();
+        return this.orderModel.findById(id).populate('retailerOffer').exec();
     }
 }
