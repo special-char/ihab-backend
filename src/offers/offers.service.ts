@@ -106,9 +106,18 @@ export class OffersService {
   }
 
   async findOne(userId: string, productId: string): Promise<Offer> {
+    const currentTime = new Date();
+
     return this.offerModel.findOne({
       productId,
-      userId
+      userId,
+      status: OfferStatus.Active,
+      offerStartTime: {
+        $lt: currentTime,
+      },
+      offerEndTime: {
+        $gt: currentTime,
+      },
     }).populate({
       path: 'retailerOffers',
       populate: [
@@ -121,7 +130,7 @@ export class OffersService {
 
   async findAll(userId: string): Promise<Offer[]> {
     return this.offerModel.find({
-      userId
+      userId,
     })
       .populate('productId')
       .populate({
