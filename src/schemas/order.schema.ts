@@ -3,7 +3,6 @@ import { Document, Schema as MongoSchema } from 'mongoose';
 import { User } from 'src/users/user.schema';
 import { OrderStatus, PaymentStatus } from 'src/utils/types';
 import { Offer } from './offers.schema';
-import { Product } from './product.schema';
 import { RetailerOffer } from './retailerOffers.schema';
 
 export type OrderDocument = Order & Document;
