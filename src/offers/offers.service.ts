@@ -6,6 +6,7 @@ import {
   RetailerOffer,
   RetailerOfferDocument,
 } from 'src/schemas/retailerOffers.schema';
+import { Retailer, RetailerDocument } from 'src/schemas/retailers.schema';
 import { RetailerOfferStatus } from 'src/utils/types';
 import { CounterOfferDto } from './dto/counter-offer.dto';
 import { MakeOfferDto } from './dto/make-offer.dto';
@@ -14,6 +15,7 @@ import { MakeOfferDto } from './dto/make-offer.dto';
 export class OffersService {
   constructor(
     @InjectModel(Offer.name) private offerModel: Model<OfferDocument>,
+    @InjectModel(Retailer.name) private retailerModel: Model<RetailerDocument>,
     @InjectModel(RetailerOffer.name)
     private retailerOfferModel: Model<RetailerOfferDocument>,
     @InjectConnection() private readonly connection: mongoose.Connection,
@@ -94,6 +96,7 @@ export class OffersService {
       .populate('productId')
       .populate({
         path: 'retailerOffers',
+
         match: {
           retailerId
         }
@@ -105,7 +108,29 @@ export class OffersService {
     return this.offerModel.findOne({
       productId,
       userId
-    }).populate('retailerOffers').exec();
+    }).populate({
+      path: 'retailerOffers',
+      populate: [
+        {
+          path: 'retailer'
+        }
+      ],
+    }).exec();
+  }
+
+  async findAll(userId: string): Promise<Offer[]> {
+    return this.offerModel.find({
+      userId
+    })
+      .populate('productId')
+      .populate({
+        path: 'retailerOffers',
+        populate: [
+          {
+            path: 'retailer'
+          }
+        ],
+      }).exec();
   }
 
   async counterOffer(
@@ -114,15 +139,23 @@ export class OffersService {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
+
+
+      const retailerDetail = await this.retailerModel.findOne({ user: offer.retailerId }).select("_id").exec();
+
+      console.log(retailerDetail);
+
       const retailerOffer = await this.retailerOfferModel.findOneAndUpdate(
         {
           OfferId: offer.offerId,
           retailerId: offer.retailerId,
+          retailer: retailerDetail._id,
           status: RetailerOfferStatus.Pending,
         },
         {
           OfferId: offer.offerId,
           retailerId: offer.retailerId,
+          retailer: retailerDetail._id,
           offerPrice: offer.offerPrice,
         },
         { upsert: true, new: true, setDefaultsOnInsert: true, session },

@@ -7,15 +7,17 @@ import {
   RetailerOffer,
   RetailerOfferSchema,
 } from 'src/schemas/retailerOffers.schema';
+import { Retailer, RetailerSchema } from 'src/schemas/retailers.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Offer.name, schema: OfferSchema },
+      { name: Retailer.name, schema: RetailerSchema },
       { name: RetailerOffer.name, schema: RetailerOfferSchema },
     ]),
   ],
   providers: [OffersService],
   controllers: [OffersController],
 })
-export class OffersModule {}
+export class OffersModule { }

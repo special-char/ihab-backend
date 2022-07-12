@@ -70,4 +70,13 @@ export class OffersController {
     const { userId } = req.user;
     return this.offerService.findOne(userId, params?.productId);
   }
+
+  @Get()
+  @Roles(Role.User)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  getAllOffer(@Req() req: Request & { user: any }): Promise<Offer[]> {
+    const { userId } = req.user;
+    return this.offerService.findAll(userId);
+  }
 }

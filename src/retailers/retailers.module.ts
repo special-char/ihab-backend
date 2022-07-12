@@ -15,4 +15,4 @@ import { RetailerService } from './retailers.service';
   controllers: [RetailerController],
   providers: [RetailerService],
 })
-export class RetailerModule {}
+export class RetailerModule { }

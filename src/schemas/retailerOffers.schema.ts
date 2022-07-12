@@ -3,6 +3,7 @@ import { Document, Schema as MongoSchema } from 'mongoose';
 import { User } from 'src/users/user.schema';
 import { RetailerOfferStatus } from 'src/utils/types';
 import { Offer } from './offers.schema';
+import { Retailer } from './retailers.schema';
 
 export type RetailerOfferDocument = RetailerOffer & Document;
 
@@ -15,6 +16,9 @@ export type RetailerOfferDocument = RetailerOffer & Document;
 export class RetailerOffer {
   @Prop({ type: MongoSchema.Types.ObjectId, ref: 'User' })
   retailerId: User;
+
+  @Prop({ type: MongoSchema.Types.ObjectId, ref: 'Retailer' })
+  retailer: Retailer;
 
   @Prop({ type: MongoSchema.Types.ObjectId, ref: 'Offer' })
   OfferId: Offer;
