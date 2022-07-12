@@ -7,7 +7,7 @@ import { Product, ProductDocument } from 'src/schemas/product.schema';
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private prodModel: Model<ProductDocument>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Product[]> {
     return this.prodModel.find().exec();
@@ -16,7 +16,6 @@ export class ProductService {
     return this.prodModel.findById(id).exec();
   }
   async findByCategories(cat_id: string): Promise<Product[]> {
-    console.log(cat_id);
     return this.prodModel.find({ categories: [cat_id] }).exec();
   }
   async create(product: Product): Promise<Product> {

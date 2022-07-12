@@ -17,7 +17,7 @@ export class OffersService {
     @InjectModel(RetailerOffer.name)
     private retailerOfferModel: Model<RetailerOfferDocument>,
     @InjectConnection() private readonly connection: mongoose.Connection,
-  ) {}
+  ) { }
 
   async create(offer: MakeOfferDto & { userId: string }): Promise<Offer> {
     const currentTime = new Date();
@@ -44,24 +44,39 @@ export class OffersService {
   }
 
   async newOffers(retailerId): Promise<Offer[]> {
+    const retailerOffers = await this.retailerOfferModel.find({ retailerId }, "_id");
+
     const currentTime = new Date();
 
     return this.offerModel
-      .find({
-        offerStartTime: {
-          $lt: currentTime,
-        },
-        offerEndTime: {
-          $gt: currentTime,
-        },
-      })
+      .find(
+        {
+          offerStartTime: {
+            $lt: currentTime,
+          },
+          offerEndTime: {
+            $gt: currentTime,
+          },
+          retailerOffers: {
+            $nin: retailerOffers.map(x => x._id.toString())
+          }
+        }
+      )
       .populate('productId')
-      .populate('retailerOffers')
+      .populate({
+        path: 'retailerOffers',
+        match: {
+          retailerId
+        }
+      })
       .exec();
   }
 
-  async findOne(id: string): Promise<Offer> {
-    return this.offerModel.findById(id).exec();
+  async findOne(userId: string, productId: string): Promise<Offer> {
+    return this.offerModel.findOne({
+      productId,
+      userId
+    }).exec();
   }
 
   async counterOffer(

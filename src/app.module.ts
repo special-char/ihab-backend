@@ -32,7 +32,6 @@ interface DatabaseConfig {
       useFactory: async (config: ConfigService) => {
         const database = config.get<DatabaseConfig>('database');
 
-        console.log(database);
 
         return {
           uri: database.url,
@@ -51,4 +50,4 @@ interface DatabaseConfig {
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

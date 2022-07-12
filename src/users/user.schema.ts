@@ -56,8 +56,5 @@ export const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.methods.validatePassword = async function (
   password: string,
 ): Promise<boolean> {
-  console.log('password', password);
-  console.log('this.password', this.password);
-
   return bcrypt.compare(password, this.password);
 };

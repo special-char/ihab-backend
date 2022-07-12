@@ -18,7 +18,7 @@ import { OffersService } from './offers.service';
 
 @Controller('offers')
 export class OffersController {
-  constructor(private readonly offerService: OffersService) {}
+  constructor(private readonly offerService: OffersService) { }
 
   @Post('make-offer')
   @Roles(Role.User)
@@ -29,8 +29,6 @@ export class OffersController {
     @Body() dto: MakeOfferDto,
   ): Promise<Offer> {
     const { userId } = req.user;
-    console.log('req.user', req.user.userId);
-    console.log('dto', dto);
     return this.offerService.create({ ...dto, userId });
   }
 
@@ -54,8 +52,13 @@ export class OffersController {
     const { userId } = req.user;
     return this.offerService.newOffers(userId);
   }
-  @Get(':id')
-  getOffer(@Param() params): Promise<Offer> {
-    return this.offerService.findOne(params?.id);
+
+  @Get(':productId')
+  @Roles(Role.User)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  getOffer(@Req() req: Request & { user: any }, @Param() params): Promise<Offer> {
+    const { userId } = req.user;
+    return this.offerService.findOne(userId, params?.productId);
   }
 }

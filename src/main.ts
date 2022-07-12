@@ -23,7 +23,6 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(new ValidationPipe());
-  console.log('port', port);
 
   const config = new DocumentBuilder()
     .setTitle('Scott-Point example')

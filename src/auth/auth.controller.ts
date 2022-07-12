@@ -9,17 +9,16 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private readonly usersService: UsersService,
-  ) {}
+  ) { }
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
+  @UseGuards(LocalAuthGuard)
   async login(@Request() req) {
-    console.log(req);
     return this.authService.login(req.user);
   }
 }
