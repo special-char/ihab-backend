@@ -8,3 +8,17 @@ export enum RetailerOfferStatus {
   Accepted = 'accepted',
   Rejected = 'rejected',
 }
+
+export enum OrderStatus {
+  Shipped = 'shipped',
+  InProgress = 'in-Progress',
+  Delivered = 'delivered',
+  Cancelled = 'cancelled',
+}
+
+export enum PaymentStatus {
+  Paid = 'paid',
+  Unpaid = 'Unpaid'
+}
+
+
