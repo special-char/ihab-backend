@@ -72,11 +72,40 @@ export class OffersService {
       .exec();
   }
 
+  async retailerAppliedOffers(retailerId): Promise<Offer[]> {
+    const retailerOffers = await this.retailerOfferModel.find({ retailerId }, "_id");
+
+    const currentTime = new Date();
+
+    return this.offerModel
+      .find(
+        {
+          offerStartTime: {
+            $lt: currentTime,
+          },
+          offerEndTime: {
+            $gt: currentTime,
+          },
+          retailerOffers: {
+            $in: retailerOffers.map(x => x._id.toString())
+          }
+        }
+      )
+      .populate('productId')
+      .populate({
+        path: 'retailerOffers',
+        match: {
+          retailerId
+        }
+      })
+      .exec();
+  }
+
   async findOne(userId: string, productId: string): Promise<Offer> {
     return this.offerModel.findOne({
       productId,
       userId
-    }).exec();
+    }).populate('retailerOffers').exec();
   }
 
   async counterOffer(

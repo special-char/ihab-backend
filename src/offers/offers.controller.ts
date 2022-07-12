@@ -53,6 +53,15 @@ export class OffersController {
     return this.offerService.newOffers(userId);
   }
 
+  @Get('applied-offers')
+  @Roles(Role.Retailer)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  getAppliedOffers(@Req() req: Request & { user: any }): Promise<Offer[]> {
+    const { userId } = req.user;
+    return this.offerService.retailerAppliedOffers(userId);
+  }
+
   @Get(':productId')
   @Roles(Role.User)
   @UseGuards(RolesGuard)
