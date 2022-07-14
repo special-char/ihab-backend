@@ -31,6 +31,6 @@ export class CreateUserDto {
   @IsEnum(UserStatus)
   readonly status: UserStatus;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('AU')
   readonly phoneNumber: string;
 }
