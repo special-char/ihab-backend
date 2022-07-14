@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from 'src/schemas/product.schema';
+import { get } from 'http';
 
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Get()
   getProducts(): Promise<Product[]> {
@@ -13,6 +14,11 @@ export class ProductController {
   @Get(':id')
   getProduct(@Param() params): Promise<Product> {
     return this.productService.findOne(params?.id);
+  }
+
+  @Get('getProductByBarcode/:barcode')
+  getProductByBarcode(@Param() params): Promise<Product> {
+    return this.productService.findOneByBarcode(params?.barcode);
   }
 
   @Get('/categories/:id')
@@ -29,4 +35,5 @@ export class ProductController {
   deleteProduct(@Param() params): Promise<boolean> {
     return this.productService.delete(params?.id);
   }
+
 }

@@ -32,6 +32,9 @@ export class Product {
   })
   @Type(() => Category)
   categories: Category;
+
+  @Prop()
+  barcode: number;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

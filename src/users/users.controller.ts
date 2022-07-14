@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Header, Post, Response, StreamableFile, UseGuards } from '@nestjs/common';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
@@ -22,6 +24,16 @@ export class UsersController {
     @Post('create-admin')
     async register(@Body() createUserDto: CreateUserDto) {
         return this.usersService.create({ ...createUserDto, roles: [Role.Admin] });
+    }
+
+    @Get('download-admin')
+    // @Header("Content-Type", 'text/xlsx')
+    // @Header("Content-Disposition", 'attachment; filename="adminList.xlsx')
+    async getFileCustomizedResponse(@Response({ passthrough: true }) res) {
+        const path = await this.usersService.generateAdminExcel();
+        return path;
+        // const file = createReadStream(path);
+        // return new StreamableFile(file);
     }
 
 }
