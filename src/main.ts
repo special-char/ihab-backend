@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -10,6 +10,7 @@ import * as fmp from 'fastify-multipart';
 import { AppModule } from './app.module';
 import { SwaggerDocumentOptions } from './swagger/swaggerDocumentOptions';
 import { FastifySwaggerCustomOptions } from './swagger/fastifySwaggerCustomOptions';
+import { AllExceptionsFilter } from './common/filters/exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,6 +22,8 @@ async function bootstrap() {
   const port = configService.get('port');
 
   app.setGlobalPrefix('api');
+
+  app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
 
   app.useGlobalPipes(new ValidationPipe());
 
