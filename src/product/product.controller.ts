@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from 'src/schemas/product.schema';
 import { get } from 'http';
@@ -8,8 +8,8 @@ export class ProductController {
   constructor(private readonly productService: ProductService) { }
 
   @Get()
-  getProducts(): Promise<Product[]> {
-    return this.productService.findAll();
+  getProducts(@Query() query): Promise<Product[]> {
+    return this.productService.findAll(query);
   }
   @Get(':id')
   getProduct(@Param() params): Promise<Product> {
