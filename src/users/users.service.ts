@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, StreamableFile } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Workbook } from 'exceljs'
 import { ClientSession, Model, Types } from 'mongoose';
@@ -7,7 +7,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Role } from 'src/common/enums/role.enum';
 import { writeFile } from 'fs/promises'
 import * as tmp from 'tmp';
-import { parse } from 'path';
+import { join, parse } from 'path';
+import { createReadStream } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -39,7 +40,7 @@ export class UsersService {
     }).exec()
   }
 
-  async generateAdminExcel(): Promise<any> {
+  async generateAdminExcel() {
     var workbook = new Workbook();
     var worksheet = workbook.addWorksheet('My Sheet');
     worksheet.columns = [
@@ -50,19 +51,10 @@ export class UsersService {
     worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
     worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
 
+    const buffer = await workbook.xlsx.writeBuffer();
 
-    let File = await new Promise((resolve, reject) => {
-      tmp.file({ discardDescriptor: true, prefix: 'admin-', postfix: '.xlsx', mode: parseInt('0600', 8) }, async (err, path) => {
-        if (err) throw new BadRequestException(err);
+    const arrayBuffer = Buffer.from(new Uint8Array(buffer));
 
-        await workbook.xlsx.writeFile(path);
-        resolve(path)
-
-      });
-    })
-
-
-    return File;
-
+    return new StreamableFile(arrayBuffer)
   }
 }

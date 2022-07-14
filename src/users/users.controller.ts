@@ -27,13 +27,10 @@ export class UsersController {
     }
 
     @Get('download-admin')
-    // @Header("Content-Type", 'text/xlsx')
-    // @Header("Content-Disposition", 'attachment; filename="adminList.xlsx')
+    @Header("Content-Type", 'text/xlsx')
+    @Header("Content-Disposition", 'attachment; filename="adminList.xlsx')
     async getFileCustomizedResponse(@Response({ passthrough: true }) res) {
-        const path = await this.usersService.generateAdminExcel();
-        return path;
-        // const file = createReadStream(path);
-        // return new StreamableFile(file);
+        return await this.usersService.generateAdminExcel();
     }
 
 }

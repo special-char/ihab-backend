@@ -18,7 +18,7 @@ import { AuthController } from './auth.controller';
         return {
           secretOrPrivateKey: configService.get<string>('secret'),
           signOptions: {
-            expiresIn: 3600,
+            expiresIn: "7d"
           },
         };
       },
