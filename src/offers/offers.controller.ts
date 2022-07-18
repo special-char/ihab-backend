@@ -72,7 +72,6 @@ export class OffersController {
   }
 
   @Get()
-  @Roles(Role.Retailer, Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   getAllOffer(@Req() req: Request & { user: any }): Promise<Offer[]> {
