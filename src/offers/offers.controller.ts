@@ -63,7 +63,6 @@ export class OffersController {
   }
 
   @Get(':productId')
-  @Roles(Role.Retailer, Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   getOffer(@Req() req: Request & { user: any }, @Param() params): Promise<Offer> {
