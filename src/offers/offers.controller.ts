@@ -63,7 +63,7 @@ export class OffersController {
   }
 
   @Get(':productId')
-  @Roles(Role.User)
+  @Roles(Role.Retailer, Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   getOffer(@Req() req: Request & { user: any }, @Param() params): Promise<Offer> {
@@ -72,7 +72,7 @@ export class OffersController {
   }
 
   @Get()
-  @Roles(Role.User)
+  @Roles(Role.Retailer, Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   getAllOffer(@Req() req: Request & { user: any }): Promise<Offer[]> {

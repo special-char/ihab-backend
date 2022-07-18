@@ -33,8 +33,6 @@ export class User {
   password: string;
 
   @Prop({
-    required: true,
-    enum: [UserStatus.Active, UserStatus.Inactive],
     default: UserStatus.Active,
   })
   status: string;

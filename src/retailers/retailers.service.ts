@@ -14,11 +14,23 @@ export class RetailerService {
     @InjectModel(Retailer.name) private retailerModel: Model<RetailerDocument>,
     private readonly usersService: UsersService,
     @InjectConnection() private readonly connection: mongoose.Connection,
-  ) {}
+  ) { }
 
-  async findAll(): Promise<Retailer[]> {
+  async findAll(query): Promise<Retailer[]> {
+    let searchQuery = {};
+
+    if (query.name) {
+      searchQuery = {
+        ...searchQuery,
+        registeredBusinessName: {
+          $regex: `${query.name}`,
+          $options: 'i'
+        }
+      }
+    }
+
     return this.retailerModel
-      .find()
+      .find(searchQuery)
       .populate('user', ['firstName', 'lastName', 'email', 'phoneNumber'])
       .exec();
   }

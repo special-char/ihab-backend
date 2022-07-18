@@ -8,7 +8,6 @@ import { Role } from 'src/common/enums/role.enum';
 import { writeFile } from 'fs/promises'
 import * as tmp from 'tmp';
 import { join, parse } from 'path';
-import { createReadStream } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -32,8 +31,31 @@ export class UsersService {
     return this.userModel.findOne({ email: email });
   }
 
-  async findAllAdmin(): Promise<User[]> {
+  async findAllAdmin(query): Promise<User[]> {
+    let searchQuery = {};
+
+    if (query.name) {
+      searchQuery = {
+        ...searchQuery,
+        $or: [
+          {
+            firstName: {
+              $regex: `${query.name}`,
+              $options: 'i'
+            },
+          },
+          {
+            lastName: {
+              $regex: `${query.name}`,
+              $options: 'i'
+            }
+          }
+        ]
+      }
+    }
+
     return this.userModel.find({
+      ...searchQuery,
       roles: {
         $in: ['admin']
       }
@@ -51,10 +73,10 @@ export class UsersService {
     worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
     worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
 
-    const buffer = await workbook.xlsx.writeBuffer();
+    const path = join(process.cwd(), 'adminFile.csv')
 
-    const arrayBuffer = Buffer.from(new Uint8Array(buffer));
+    await workbook.csv.writeFile(path)
 
-    return new StreamableFile(arrayBuffer)
+    return path;
   }
 }

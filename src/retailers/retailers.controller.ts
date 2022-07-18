@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   // Req,
   // UploadedFiles,
 } from '@nestjs/common';
@@ -20,11 +21,11 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('retailers')
 export class RetailerController {
-  constructor(private readonly retailerService: RetailerService) {}
+  constructor(private readonly retailerService: RetailerService) { }
 
   @Get()
-  getRetailers(): Promise<Retailer[]> {
-    return this.retailerService.findAll();
+  getRetailers(@Query() query): Promise<Retailer[]> {
+    return this.retailerService.findAll(query);
   }
 
   @Get(':id')

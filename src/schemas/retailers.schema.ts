@@ -13,43 +13,43 @@ export class Retailer {
   @Prop({ required: true })
   registeredBusinessName: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   shopDescription: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   shopImage: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   bannerImage: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   industry: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   currency: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   abnOrAcn: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   yelloStoreRefId: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   ausPostStoreId: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   storeUrl: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   businessDesc: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   ownerPhone: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   webAddress: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   isWebLive: string;
   @ApiProperty()
   @Prop({ required: true })
@@ -70,73 +70,73 @@ export class Retailer {
   @Prop({ required: true })
   postcode: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   averageOrderValue: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   numberOfProductsSold: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   totalAnnualSales: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   pointOfSale: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   inventoryManagement: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   haveExistingAPI: string;
   @ApiProperty()
   @Prop({ required: true })
   transactionFees: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   freeExpShipping: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   freeStandShipping: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   freeInterShipping: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   freeStandSendle: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   freeInterSendle: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   orderEmail: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   maxReturnDays: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   retailerSpecificDesc: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   bankAccName: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   bankName: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   bsb: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   accNum: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   btAccManager: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   sendleAPiKey: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   sendleId: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   sendlePlans: string;
   @ApiProperty()
   @Prop({ required: true })
@@ -148,10 +148,10 @@ export class Retailer {
   @Prop()
   additionalInfo: string;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   isOnBoard: boolean;
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop()
   slug: string;
   @ApiProperty()
   @IsOptional()

@@ -1,5 +1,7 @@
 import {
   IsEmail,
+  IsEmpty,
+  isEmpty,
   IsEnum,
   IsNotEmpty,
   IsPhoneNumber,
@@ -28,9 +30,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly password: string;
 
-  @IsEnum(UserStatus)
   readonly status: UserStatus;
 
-  @IsPhoneNumber('AU')
   readonly phoneNumber: string;
 }
