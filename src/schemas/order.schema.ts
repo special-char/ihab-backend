@@ -16,6 +16,11 @@ export type OrderDocument = Order & Document;
     toObject: { virtuals: true },
 })
 export class Order {
+
+    _id: MongoSchema.Types.ObjectId
+
+    createdAt: Date
+
     @Prop({ type: MongoSchema.Types.ObjectId, ref: User.name })
     user: User;
 

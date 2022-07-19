@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Param,
   Patch,
   Post,
   Query,
+  Response,
   // Req,
   // UploadedFiles,
 } from '@nestjs/common';
@@ -18,6 +20,7 @@ import { RetailerService } from './retailers.service';
 // import { diskStorage } from 'multer';
 import { RetailerDto } from 'src/utils/dtos';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { createReadStream } from 'fs';
 
 @Controller('retailers')
 export class RetailerController {
@@ -45,5 +48,13 @@ export class RetailerController {
     @Body() dto: Category[],
   ): Promise<Retailer> {
     return this.retailerService.assignCategories(dto, id);
+  }
+
+  @Get('download')
+  @Header("Content-Disposition", 'attachment; filename="retailerList.xlsx')
+  async downloadRetailers(@Response({ passthrough: true }) res) {
+    const path = await this.retailerService.downlaodRetailers()
+    const file = createReadStream(path)
+    res.type('text/xlsx').send(file);
   }
 }

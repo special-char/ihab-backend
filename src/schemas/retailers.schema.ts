@@ -9,6 +9,9 @@ export type RetailerDocument = Retailer & Document;
 
 @Schema()
 export class Retailer {
+
+  _id: MongoSchema.Types.ObjectId
+
   @ApiProperty()
   @Prop({ required: true })
   registeredBusinessName: string;

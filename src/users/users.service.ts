@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, StreamableFile } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Workbook } from 'exceljs'
 import { ClientSession, Model, Types } from 'mongoose';
@@ -8,6 +8,8 @@ import { Role } from 'src/common/enums/role.enum';
 import { writeFile } from 'fs/promises'
 import * as tmp from 'tmp';
 import { join, parse } from 'path';
+import { NotFoundError } from 'rxjs';
+import { PathLike } from 'fs';
 
 @Injectable()
 export class UsersService {
@@ -31,10 +33,10 @@ export class UsersService {
     return this.userModel.findOne({ email: email });
   }
 
-  async findAllAdmin(query): Promise<User[]> {
+  async findAllAdmin(query?: any): Promise<User[]> {
     let searchQuery = {};
 
-    if (query.name) {
+    if (query?.name) {
       searchQuery = {
         ...searchQuery,
         $or: [
@@ -63,20 +65,34 @@ export class UsersService {
   }
 
   async generateAdminExcel() {
+    const admins = await this.findAllAdmin();
+
+    if (!admins) throw new NotFoundException("No data to download")
+
     var workbook = new Workbook();
     var worksheet = workbook.addWorksheet('My Sheet');
     worksheet.columns = [
-      { header: 'Id', key: 'id', width: 10 },
-      { header: 'Name', key: 'name', width: 32 },
-      { header: 'D.O.B.', key: 'DOB', width: 10 }
+      { header: 'Id', key: '_id', width: 30 },
+      { header: 'First Name', key: 'firstName', width: 32 },
+      { header: 'Last Name', key: 'lastName', width: 32 },
+      { header: 'Email', key: 'email', width: 32 },
+      { header: 'Status', key: 'status', width: 32 },
+      { header: 'Phone Number', key: 'phoneNumber', width: 20 },
     ];
-    worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
-    worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
 
-    const path = join(process.cwd(), 'adminFile.csv')
+    for (let i = 0; i < admins.length; i++) {
+      worksheet.addRow(admins[i]);
+    }
 
-    await workbook.csv.writeFile(path)
+    const File = await new Promise((resolve) => {
+      tmp.file({ discardDescriptor: true, prefix: 'adminList', postfix: '.xlsx' }, async (err, path, fd, cleanupCallback) => {
+        if (err) throw new BadRequestException(err);
+        await workbook.xlsx.writeFile(path)
+        resolve(path);
+      });
 
-    return path;
+    })
+
+    return File as PathLike;
   }
 }

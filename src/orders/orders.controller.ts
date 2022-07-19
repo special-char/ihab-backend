@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Header, Param, Post, Req, Response, UseGuards } from '@nestjs/common';
+import { createReadStream } from 'fs';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
@@ -13,6 +14,14 @@ export class OrdersController {
     @Get()
     getOrders(): Promise<Order[]> {
         return this.orderService.findAll();
+    }
+
+    @Get('download')
+    @Header("Content-Disposition", 'attachment; filename="orderList.xlsx')
+    async downloadOrders(@Response({ passthrough: true }) res) {
+        const path = await this.orderService.downlaodOrders();
+        const file = createReadStream(path)
+        res.type('text/xlsx').send(file);
     }
 
     @Get(':id')

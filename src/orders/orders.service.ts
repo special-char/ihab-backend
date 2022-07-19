@@ -1,9 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Workbook } from 'exceljs';
+import { PathLike } from 'fs';
 import mongoose, { Model } from 'mongoose';
 import { Offer, OfferDocument } from 'src/schemas/offers.schema';
 import { Order, OrderDocument } from 'src/schemas/order.schema';
 import { OfferStatus } from 'src/utils/types';
+import * as tmp from 'tmp';
 
 @Injectable()
 export class OrdersService {
@@ -59,5 +62,51 @@ export class OrdersService {
                 }
             ],
         }).exec();
+    }
+
+    async downlaodOrders() {
+        const orders = await this.findAll();
+
+        if (!orders) throw new NotFoundException("No data to download")
+
+        var workbook = new Workbook();
+        var worksheet = workbook.addWorksheet('My Sheet');
+        worksheet.columns = [
+            { header: 'Order Number', key: 'orderNumber', width: 30 },
+            { header: 'Order Date', key: 'date', width: 32 },
+            { header: 'Customer', key: 'customer', width: 32 },
+            { header: 'Items', key: 'items', width: 32 },
+            { header: 'Total Price', key: 'totalPrice', width: 32 },
+            { header: 'Payment Status', key: 'paymentStatus', width: 20 },
+            { header: 'Order Status', key: 'orderStatus', width: 20 },
+            { header: 'Retailer Payment Status', key: 'retailerPaymentStatus', width: 20 },
+            { header: 'Customer Offer', key: 'shipping', width: 20 },
+        ];
+
+        orders.map((x) => ({
+            orderNumber: x._id,
+            date: x.createdAt,
+            customer: `${x.customerFirstName} ${x.customerLastName}`,
+            items: `${x.itemQuantity} item(s)`,
+            totalPrice: new Intl.NumberFormat("en-AU", {
+                style: "currency",
+                currency: "AUD",
+            }).format(x.itemQuantity * x.retailerOffer.offerPrice),
+            paymentStatus: x.paymentStatus,
+            orderStatus: x.orderStatus,
+            retailerPaymentStatus: x.retailerPaymentStatus,
+            shipping: x.customerOffer,
+        })).forEach(item => worksheet.addRow(item))
+
+        const File = await new Promise((resolve) => {
+            tmp.file({ discardDescriptor: true, prefix: 'adminList', postfix: '.xlsx' }, async (err, path, fd, cleanupCallback) => {
+                if (err) throw new BadRequestException(err);
+                await workbook.xlsx.writeFile(path)
+                resolve(path);
+            });
+
+        })
+
+        return File as PathLike;
     }
 }
