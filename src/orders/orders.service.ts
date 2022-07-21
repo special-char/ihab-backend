@@ -42,9 +42,15 @@ export class OrdersService {
         }
     }
 
+    async update(id, order): Promise<Order> {
+        return this.orderModel.findByIdAndUpdate(id, order).exec()
+    }
+
     async findAll(): Promise<Order[]> {
         return this.orderModel.find().populate('retailerOffer').exec();
     }
+
+
 
     async findOne(id: string): Promise<Order> {
         return this.orderModel.findById(id).populate('user').populate({

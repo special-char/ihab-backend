@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, Param, Post, Req, Response, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Header, Param, Post, Put, Req, Response, UseGuards } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
@@ -27,6 +27,11 @@ export class OrdersController {
     @Get(':id')
     getOrder(@Param() params): Promise<Order> {
         return this.orderService.findOne(params?.id);
+    }
+
+    @Put(":id")
+    updateOrder(@Param() params, @Body() dto): Promise<Order> {
+        return this.orderService.update(params?.id, dto)
     }
 
     @Post()
