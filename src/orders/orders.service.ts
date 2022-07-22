@@ -5,7 +5,7 @@ import { PathLike } from 'fs';
 import mongoose, { Model } from 'mongoose';
 import { Offer, OfferDocument } from 'src/schemas/offers.schema';
 import { Order, OrderDocument } from 'src/schemas/order.schema';
-import { RetailerOfferDocument } from 'src/schemas/retailerOffers.schema';
+import { RetailerOffer, RetailerOfferDocument } from 'src/schemas/retailerOffers.schema';
 import { OfferStatus } from 'src/utils/types';
 import * as tmp from 'tmp';
 
@@ -15,7 +15,7 @@ export class OrdersService {
     constructor(
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
         @InjectModel(Offer.name) private offerModel: Model<OfferDocument>,
-        @InjectModel(Offer.name) private retailerOfferModel: Model<RetailerOfferDocument>,
+        @InjectModel(RetailerOffer.name) private retailerOfferModel: Model<RetailerOfferDocument>,
         @InjectConnection() private readonly connection: mongoose.Connection,
     ) { }
 
@@ -70,7 +70,8 @@ export class OrdersService {
 
 
             searchQuery = {
-                ...searchQuery, retailerOffer: {
+                ...searchQuery,
+                retailerOffer: {
                     $in: retailerIds.map(x => x._id)
                 }
             }
