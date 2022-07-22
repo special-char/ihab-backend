@@ -5,6 +5,7 @@ import { PathLike } from 'fs';
 import mongoose, { Model } from 'mongoose';
 import { Offer, OfferDocument } from 'src/schemas/offers.schema';
 import { Order, OrderDocument } from 'src/schemas/order.schema';
+import { RetailerOfferDocument } from 'src/schemas/retailerOffers.schema';
 import { OfferStatus } from 'src/utils/types';
 import * as tmp from 'tmp';
 
@@ -14,6 +15,7 @@ export class OrdersService {
     constructor(
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
         @InjectModel(Offer.name) private offerModel: Model<OfferDocument>,
+        @InjectModel(Offer.name) private retailerOfferModel: Model<RetailerOfferDocument>,
         @InjectConnection() private readonly connection: mongoose.Connection,
     ) { }
 
@@ -46,8 +48,43 @@ export class OrdersService {
         return this.orderModel.findByIdAndUpdate(id, order).exec()
     }
 
-    async findAll(): Promise<Order[]> {
-        return this.orderModel.find().populate('retailerOffer').exec();
+    async findAll(query?: any): Promise<Order[]> {
+        let searchQuery = {}
+
+        if (query?.orderStatus) {
+            searchQuery = { ...searchQuery, orderStatus: query?.orderStatus }
+        }
+
+        if (query?.paymentStatus) {
+            searchQuery = { ...searchQuery, orderStatus: query?.paymentStatus }
+        }
+
+        if (query?.orderId) {
+            searchQuery = { ...searchQuery, _id: query?.orderId }
+        }
+
+        if (query?.retailerId) {
+            const retailerIds = await this.retailerOfferModel.find({ retailer: query?.retailer }).select('_id')
+
+            console.log(retailerIds.map(x => x._id));
+
+
+            searchQuery = {
+                ...searchQuery, retailerOffer: {
+                    $in: retailerIds.map(x => x._id)
+                }
+            }
+        }
+
+        // if(query?.orderFromDate) {
+        //     searchQuery = { ...searchQuery, _id: query?.orderId }
+        // }
+
+        // if(query?.orderEndDate) {
+        //     searchQuery = { ...searchQuery, _id: query?.orderId }
+        // }
+
+        return this.orderModel.find(searchQuery).populate('retailerOffer').exec();
     }
 
 
@@ -114,5 +151,14 @@ export class OrdersService {
         })
 
         return File as PathLike;
+    }
+
+    async deleteAll() {
+        return this.orderModel.deleteMany();
+    }
+
+    async deleteAllRetailerOffer() {
+        console.log("delete retailer offer");
+        return this.retailerOfferModel.deleteMany();
     }
 }

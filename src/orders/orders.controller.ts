@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, Param, Post, Put, Req, Response, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, Param, Post, Put, Query, Req, Response, UseGuards } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
@@ -12,8 +12,8 @@ export class OrdersController {
     constructor(private readonly orderService: OrdersService) { }
 
     @Get()
-    getOrders(): Promise<Order[]> {
-        return this.orderService.findAll();
+    getOrders(@Query() query): Promise<Order[]> {
+        return this.orderService.findAll(query);
     }
 
     @Get('download')
@@ -41,5 +41,21 @@ export class OrdersController {
     createOrder(@Req() req: Request & { user: any }, @Body() dto: Order): Promise<Order> {
         const { userId } = req.user;
         return this.orderService.create({ ...dto, user: userId });
+    }
+
+    @Delete()
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard)
+    deleteAll() {
+        return this.orderService.deleteAll()
+    }
+
+    @Delete('retailer-offers')
+    @Roles(Role.Admin)
+    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard)
+    deleteAllRetailerOffer() {
+        return this.orderService.deleteAllRetailerOffer()
     }
 }

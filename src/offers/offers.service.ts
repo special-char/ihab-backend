@@ -62,7 +62,8 @@ export class OffersService {
           },
           retailerOffers: {
             $nin: retailerOffers.map(x => x._id.toString())
-          }
+          },
+          status: OfferStatus.Active
         }
       )
       .populate('productId')
@@ -91,7 +92,8 @@ export class OffersService {
           },
           retailerOffers: {
             $in: retailerOffers.map(x => x._id.toString())
-          }
+          },
+          status: OfferStatus.Active
         }
       )
       .populate('productId')
@@ -190,5 +192,11 @@ export class OffersService {
       session.endSession();
       throw error;
     }
+
+  }
+
+
+  async deleteAll() {
+    return this.offerModel.deleteMany();
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -76,5 +77,13 @@ export class OffersController {
   getAllOffer(@Req() req: Request & { user: any }): Promise<Offer[]> {
     const { userId } = req.user;
     return this.offerService.findAll(userId);
+  }
+
+  @Delete()
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  deleteAll() {
+    return this.offerService.deleteAll()
   }
 }
