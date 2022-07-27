@@ -64,11 +64,7 @@ export class OrdersService {
         }
 
         if (query?.retailerId) {
-            const retailerIds = await this.retailerOfferModel.find({ retailer: query?.retailer }).select('_id')
-
-            console.log(retailerIds.map(x => x._id));
-
-
+            const retailerIds = await this.retailerOfferModel.find({ retailer: query?.retailerId }).select('_id')
             searchQuery = {
                 ...searchQuery,
                 retailerOffer: {
@@ -77,13 +73,25 @@ export class OrdersService {
             }
         }
 
-        // if(query?.orderFromDate) {
-        //     searchQuery = { ...searchQuery, _id: query?.orderId }
-        // }
+        if (query?.orderFromDate) {
+            searchQuery = {
+                ...searchQuery,
+                createdAt: {
+                    $gt: query?.orderFromDate
+                }
 
-        // if(query?.orderEndDate) {
-        //     searchQuery = { ...searchQuery, _id: query?.orderId }
-        // }
+            }
+        }
+
+        if (query?.orderEndDate) {
+            searchQuery = {
+                ...searchQuery,
+                createdAt: {
+                    $lt: query?.orderEndDate
+                }
+
+            }
+        }
 
         return this.orderModel.find(searchQuery).populate('retailerOffer').exec();
     }
