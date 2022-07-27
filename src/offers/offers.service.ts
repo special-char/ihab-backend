@@ -28,6 +28,7 @@ export class OffersService {
       .find({
         userId: offer.userId,
         productId: offer.productId,
+        variantId: offer.variantId,
         offerStartTime: {
           $lt: currentTime,
         },
@@ -107,13 +108,14 @@ export class OffersService {
       .exec();
   }
 
-  async findOne(userId: string, productId: string): Promise<Offer> {
+  async findOne(userId: string, productId: string, variantId: string): Promise<Offer> {
     const currentTime = new Date();
 
     return this.offerModel.findOne({
       productId,
       userId,
       status: OfferStatus.Active,
+      variantId: variantId,
       offerStartTime: {
         $lt: currentTime,
       },

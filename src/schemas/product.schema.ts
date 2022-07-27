@@ -5,6 +5,11 @@ import { Category } from './category.schema';
 
 export type ProductDocument = Product & Document;
 
+type Variant = {
+  name: string,
+  price: number
+};
+
 @Schema()
 export class Product {
   @Prop({ required: true })
@@ -35,6 +40,9 @@ export class Product {
 
   @Prop()
   barcode: number;
+
+  @Prop({ type: [{ name: MongoSchema.Types.String, price: MongoSchema.Types.Number }] })
+  variant: Variant[]
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

@@ -63,12 +63,12 @@ export class OffersController {
     return this.offerService.retailerAppliedOffers(userId);
   }
 
-  @Get(':productId')
+  @Get('/:productId/:variantId')
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   getOffer(@Req() req: Request & { user: any }, @Param() params): Promise<Offer> {
     const { userId } = req.user;
-    return this.offerService.findOne(userId, params?.productId);
+    return this.offerService.findOne(userId, params?.productId, params?.variantId);
   }
 
   @Get()

@@ -5,6 +5,10 @@ export class MakeOfferDto {
   @IsNotEmpty()
   productId: string;
 
+  @IsString()
+  @IsNotEmpty()
+  variantId: string;
+
   @IsNotEmpty()
   customerOfferPrice: number;
 }

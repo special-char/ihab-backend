@@ -24,6 +24,9 @@ export class Offer {
   @Prop({ type: MongoSchema.Types.ObjectId, ref: Product.name })
   productId: Product;
 
+  @Prop({ type: String })
+  variantId: string;
+
   @Prop({
     type: String,
     required: true,

@@ -16,6 +16,7 @@ export class ProductService {
     }
     return this.prodModel.find().exec();
   }
+
   async findOne(id: string): Promise<Product> {
     return this.prodModel.findById(id).exec();
   }
@@ -58,8 +59,8 @@ export class ProductService {
     const dta = new this.prodModel(product);
     return dta.save();
   }
+
   async delete(id: string): Promise<boolean> {
     return this.prodModel.findByIdAndRemove(id);
   }
-
 }

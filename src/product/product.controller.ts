@@ -35,5 +35,4 @@ export class ProductController {
   deleteProduct(@Param() params): Promise<boolean> {
     return this.productService.delete(params?.id);
   }
-
 }
