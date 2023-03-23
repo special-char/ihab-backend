@@ -28,10 +28,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Scott-Point example')
+    .setTitle('iHab example')
     .setDescription('Scott Point API')
     .setVersion('1.0')
-    .addTag('scott-point')
+    .addTag('ihab')
     .build();
 
   const options: SwaggerDocumentOptions = {
