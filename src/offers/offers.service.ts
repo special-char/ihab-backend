@@ -19,7 +19,7 @@ export class OffersService {
     @InjectModel(RetailerOffer.name)
     private retailerOfferModel: Model<RetailerOfferDocument>,
     @InjectConnection() private readonly connection: mongoose.Connection,
-  ) { }
+  ) {}
 
   async create(offer: MakeOfferDto & { userId: string }): Promise<Offer> {
     const currentTime = new Date();
@@ -35,7 +35,7 @@ export class OffersService {
         offerEndTime: {
           $gt: currentTime,
         },
-        status: OfferStatus.Active
+        status: OfferStatus.Active,
       })
       .exec();
 
@@ -48,103 +48,114 @@ export class OffersService {
   }
 
   async newOffers(retailerId): Promise<Offer[]> {
-    const retailerOffers = await this.retailerOfferModel.find({ retailerId }, "_id");
+    const retailerOffers = await this.retailerOfferModel.find(
+      { retailerId },
+      '_id',
+    );
 
     const currentTime = new Date();
 
     return this.offerModel
-      .find(
-        {
-          offerStartTime: {
-            $lt: currentTime,
-          },
-          offerEndTime: {
-            $gt: currentTime,
-          },
-          retailerOffers: {
-            $nin: retailerOffers.map(x => x._id.toString())
-          },
-          status: OfferStatus.Active
-        }
-      )
+      .find({
+        offerStartTime: {
+          $lt: currentTime,
+        },
+        offerEndTime: {
+          $gt: currentTime,
+        },
+        retailerOffers: {
+          $nin: retailerOffers.map((x) => x._id.toString()),
+        },
+        status: OfferStatus.Active,
+      })
       .populate('productId')
       .populate({
         path: 'retailerOffers',
         match: {
-          retailerId
-        }
+          retailerId,
+        },
       })
       .exec();
   }
 
   async retailerAppliedOffers(retailerId): Promise<Offer[]> {
-    const retailerOffers = await this.retailerOfferModel.find({ retailerId }, "_id");
+    const retailerOffers = await this.retailerOfferModel.find(
+      { retailerId },
+      '_id',
+    );
 
     const currentTime = new Date();
 
     return this.offerModel
-      .find(
-        {
-          offerStartTime: {
-            $lt: currentTime,
-          },
-          offerEndTime: {
-            $gt: currentTime,
-          },
-          retailerOffers: {
-            $in: retailerOffers.map(x => x._id.toString())
-          },
-          status: OfferStatus.Active
-        }
-      )
+      .find({
+        offerStartTime: {
+          $lt: currentTime,
+        },
+        offerEndTime: {
+          $gt: currentTime,
+        },
+        retailerOffers: {
+          $in: retailerOffers.map((x) => x._id.toString()),
+        },
+        status: OfferStatus.Active,
+      })
       .populate('productId')
       .populate({
         path: 'retailerOffers',
 
         match: {
-          retailerId
-        }
+          retailerId,
+        },
       })
       .exec();
   }
 
-  async findOne(userId: string, productId: string, variantId: string): Promise<Offer> {
+  async findOne(
+    userId: string,
+    productId: string,
+    variantId: string,
+  ): Promise<Offer> {
     const currentTime = new Date();
 
-    return this.offerModel.findOne({
-      productId,
-      userId,
-      status: OfferStatus.Active,
-      variantId: variantId,
-      offerStartTime: {
-        $lt: currentTime,
-      },
-      offerEndTime: {
-        $gt: currentTime,
-      },
-    }).populate({
-      path: 'retailerOffers',
-      populate: [
-        {
-          path: 'retailer'
-        }
-      ],
-    }).exec();
+    return this.offerModel
+      .findOne({
+        productId,
+        userId,
+        status: OfferStatus.Active,
+        variantId: variantId,
+        offerStartTime: {
+          $lt: currentTime,
+        },
+        offerEndTime: {
+          $gt: currentTime,
+        },
+      })
+      .populate({
+        path: 'retailerOffers',
+        populate: [
+          {
+            path: 'retailer',
+          },
+        ],
+      })
+      .exec();
   }
 
   async findAll(userId: string): Promise<Offer[]> {
-    return this.offerModel.find({
-      userId,
-    })
+    return this.offerModel
+      .find({
+        userId,
+      })
       .populate('productId')
       .populate({
         path: 'retailerOffers',
         populate: [
           {
-            path: 'retailer'
-          }
+            path: 'retailer',
+          },
         ],
-      }).exec();
+      })
+      .exec();
   }
 
   async counterOffer(
@@ -153,9 +164,10 @@ export class OffersService {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-
-
-      const retailerDetail = await this.retailerModel.findOne({ user: offer.retailerId }).select("_id").exec();
+      const retailerDetail = await this.retailerModel
+        .findOne({ user: offer.retailerId })
+        .select('_id')
+        .exec();
 
       console.log(retailerDetail);
 
@@ -194,11 +206,10 @@ export class OffersService {
       session.endSession();
       throw error;
     }
-
   }
 
 
-  async deleteAll() {
-    return this.offerModel.deleteMany();
+  async rejectOffer() {
+
   }
 }

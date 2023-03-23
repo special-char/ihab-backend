@@ -19,7 +19,7 @@ import { OffersService } from './offers.service';
 
 @Controller('offers')
 export class OffersController {
-  constructor(private readonly offerService: OffersService) { }
+  constructor(private readonly offerService: OffersService) {}
 
   @Post('make-offer')
   @Roles(Role.User)
@@ -66,9 +66,16 @@ export class OffersController {
   @Get('/:productId/:variantId')
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
-  getOffer(@Req() req: Request & { user: any }, @Param() params): Promise<Offer> {
+  getOffer(
+    @Req() req: Request & { user: any },
+    @Param() params,
+  ): Promise<Offer> {
     const { userId } = req.user;
-    return this.offerService.findOne(userId, params?.productId, params?.variantId);
+    return this.offerService.findOne(
+      userId,
+      params?.productId,
+      params?.variantId,
+    );
   }
 
   @Get()
@@ -77,13 +84,5 @@ export class OffersController {
   getAllOffer(@Req() req: Request & { user: any }): Promise<Offer[]> {
     const { userId } = req.user;
     return this.offerService.findAll(userId);
-  }
-
-  @Delete()
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
-  @UseGuards(JwtAuthGuard)
-  deleteAll() {
-    return this.offerService.deleteAll()
   }
 }
