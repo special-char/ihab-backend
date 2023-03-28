@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, Header, Param, Post, Put, Query, Req, Response, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Header,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  Response,
+  UseGuards,
+} from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
@@ -9,53 +22,56 @@ import { OrdersService } from './orders.service';
 
 @Controller('orders')
 export class OrdersController {
-    constructor(private readonly orderService: OrdersService) { }
+  constructor(private readonly orderService: OrdersService) {}
 
-    @Get()
-    getOrders(@Query() query): Promise<Order[]> {
-        return this.orderService.findAll(query);
-    }
+  @Get()
+  getOrders(@Query() query): Promise<Order[]> {
+    return this.orderService.findAll(query);
+  }
 
-    @Get('download')
-    @Header("Content-Disposition", 'attachment; filename="orderList.xlsx')
-    async downloadOrders(@Response({ passthrough: true }) res) {
-        const path = await this.orderService.downlaodOrders();
-        const file = createReadStream(path)
-        res.type('text/xlsx').send(file);
-    }
+  @Get('download')
+  @Header('Content-Disposition', 'attachment; filename="orderList.xlsx')
+  async downloadOrders(@Response({ passthrough: true }) res) {
+    const path = await this.orderService.downlaodOrders();
+    const file = createReadStream(path);
+    res.type('text/xlsx').send(file);
+  }
 
-    @Get(':id')
-    getOrder(@Param() params): Promise<Order> {
-        return this.orderService.findOne(params?.id);
-    }
+  @Get(':id')
+  getOrder(@Param() params): Promise<Order> {
+    return this.orderService.findOne(params?.id);
+  }
 
-    @Put(":id")
-    updateOrder(@Param() params, @Body() dto): Promise<Order> {
-        return this.orderService.update(params?.id, dto)
-    }
+  @Put(':id')
+  updateOrder(@Param() params, @Body() dto): Promise<Order> {
+    return this.orderService.update(params?.id, dto);
+  }
 
-    @Post()
-    @Roles(Role.User)
-    @UseGuards(RolesGuard)
-    @UseGuards(JwtAuthGuard)
-    createOrder(@Req() req: Request & { user: any }, @Body() dto: Order): Promise<Order> {
-        const { userId } = req.user;
-        return this.orderService.create({ ...dto, user: userId });
-    }
+  @Post()
+  @Roles(Role.User)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  createOrder(
+    @Req() req: Request & { user: any },
+    @Body() dto: Order,
+  ): Promise<Order> {
+    const { userId } = req.user;
+    return this.orderService.create({ ...dto, user: userId });
+  }
 
-    @Delete()
-    @Roles(Role.Admin)
-    @UseGuards(RolesGuard)
-    @UseGuards(JwtAuthGuard)
-    deleteAll() {
-        return this.orderService.deleteAll()
-    }
+  @Delete()
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  deleteAll() {
+    return this.orderService.deleteAll();
+  }
 
-    @Delete('retailer-offers')
-    @Roles(Role.Admin)
-    @UseGuards(RolesGuard)
-    @UseGuards(JwtAuthGuard)
-    deleteAllRetailerOffer() {
-        return this.orderService.deleteAllRetailerOffer()
-    }
+  @Delete('retailer-offers')
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  deleteAllRetailerOffer() {
+    return this.orderService.deleteAllRetailerOffer();
+  }
 }
