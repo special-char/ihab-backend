@@ -12,8 +12,6 @@ import { OrdersModule } from './orders/orders.module';
 import { OffersModule } from './offers/offers.module';
 import { RetailerModule } from './retailers/retailers.module';
 import { ProductModule } from './product/product.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './common/guards/roles.guard';
 import { CardsModule } from './cards/cards.module';
 
 interface DatabaseConfig {
@@ -33,7 +31,6 @@ interface DatabaseConfig {
       useFactory: async (config: ConfigService) => {
         const database = config.get<DatabaseConfig>('database');
 
-
         return {
           uri: database.url,
         };
@@ -52,4 +49,4 @@ interface DatabaseConfig {
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
